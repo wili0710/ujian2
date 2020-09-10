@@ -1,17 +1,34 @@
 {
-    "users":[
-        {
-            "id":1,
-            "username":"dino",
-            "password":"abcd"
-        },
-        {
-            "id":2,
-            "username":"admin",
-            "password":"root"
-        }
-    ],
-    "products":[
-        
-    ]
+  "users": [
+    {
+      "id": 1,
+      "username": "dino",
+      "password": "abcd"
+    },
+    {
+      "id": 2,
+      "username": "admin",
+      "password": "root"
+    }
+  ],
+  "products": [
+    {
+      "namatrip": "go to lombok",
+      "gambar": "https://media.nomadicmatt.com/baliguide.jpg",
+      "tanggalmulai": 1599782400000,
+      "tanggalberakhir": 1600905600000,
+      "harga": "200000",
+      "deskripsi": "jl. jlan ke lombok aja deh",
+      "id": 1
+    },
+    {
+      "namatrip": "go to bali",
+      "gambar": "https://adajejak.com/wp-content/uploads/2019/11/10153833-0istock-653953140_cover_1920x1200.jpg",
+      "tanggalmulai": 1600128000000,
+      "tanggalberakhir": 1600646400000,
+      "harga": "300000",
+      "deskripsi": "ggwp aja dah",
+      "id": 2
+    }
+  ]
 }

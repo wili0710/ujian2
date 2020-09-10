@@ -1,6 +1,5 @@
+import React, {useState,useRef, useEffect} from 'react';
 import Header from './../components/Header'
-
-import React, {useState} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Table from '@material-ui/core/Table';
@@ -8,51 +7,21 @@ import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
-import TablePagination from '@material-ui/core/TablePagination';
+import {MdDeleteForever} from 'react-icons/md'
+import {BiEdit} from 'react-icons/bi'
 import TableRow from '@material-ui/core/TableRow';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
-const columns = [
-  { id: 'trip', label: 'TripName', minWidth: 170 },
-  { id: 'Foto', label: 'Gambar', minWidth: 100 },
-  { id: 'description', label: 'Description', minWidth: 100 },
-  {
-    id: 'harga',
-    label: 'Harga',
-    minWidth: 170,
-    align: 'right',
-    format: (value) => value.toLocaleString('en-US'),
-  },
-  {
-    id: 'tanggal',
-    label: 'tanggal',
-    minWidth: 170,
-    align: 'right',
-    format: (value) => value.toLocaleString('en-US'),
-  },
+import {priceFormatter, API_URL} from './../helpers/idrformat'
+import axios from 'axios'
 
-];
 
-function createData(trip, description, harga, tanggal,gambar) {
-  return { trip, description, harga, tanggal,gambar  };
-}
 
-const rows = [
-//   createData('India', 'IN', 1324171354, 3287263),
-//   createData('China', 'CN', 1403500365, 9596961),
-//   createData('Italy', 'IT', 60483973, 301340),
-//   createData('United States', 'US', 327167434, 9833520),
-//   createData('Canada', 'CA', 37602103, 9984670),
-//   createData('Australia', 'AU', 25475400, 7692024),
-//   createData('Germany', 'DE', 83019200, 357578),
-//   createData('Ireland', 'IE', 4857000, 70273),
-//   createData('Mexico', 'MX', 126577691, 1972550),
-//   createData('Japan', 'JP', 126317000, 377973),
-//   createData('France', 'FR', 67022000, 640679),
-//   createData('United Kingdom', 'GB', 67545757, 242495),
-//   createData('Russia', 'RU', 146793744, 17098246),
-//   createData('Nigeria', 'NG', 200962417, 923768),
-//   createData('Brazil', 'BR', 210147125, 8515767),
-];
+
+
+
+
+
+
 
 const useStyles = makeStyles({
   root: {
@@ -65,82 +34,261 @@ const useStyles = makeStyles({
 
 export default function StickyHeadTable() {
   const classes = useStyles();
-  const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(10);
-
-  const handleChangePage = (event, newPage) => {
-    setPage(newPage);
-  };
-
-  const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(+event.target.value);
-    setPage(0);
-  };
   const [modal, setModal] = useState(false);
+  const [modaledit, setModaledit] = useState(false);
+
+  const [addform,setaddform]=useState({
+    namaTrip:useRef(),
+    gambar:useRef(),
+    tanggalmulai:useRef(),
+    tanggalberakhir:useRef(),
+    harga:'',
+    descripsi:useRef()
+  })
+  const [editform,seteditform]=useState({
+    namaTrip:useRef(),
+    gambar:useRef(),
+    tanggalmulai:useRef(),
+    tanggalberakhir:useRef(),
+    harga:'',
+    descripsi:useRef()
+  })
+  const [indexedit,setindexedit]=useState(0)
+  const [product,setProduct]=useState([])
+
+  useEffect(()=>{
+    axios.get(`${API_URL}/products`)
+    .then((res)=>{
+      setProduct(res.data)
+    }).catch((err)=>{
+      console.log(err)
+    })
+  },[])
+
+
+  const onhargachange=(e)=>{
+    if(e.target.value===''){
+      setaddform({...addform,harga:0})
+    }
+    if(Number(e.target.value)){
+        if(addform.harga===0){
+            setaddform({...addform,harga:e.target.value[1]})
+        }else{
+            setaddform({...addform,harga:e.target.value})    
+        }
+    }
+  }
+  const onhargachangeedit=(e)=>{
+    console.log(e.target.value)
+    if(e.target.value===''){
+      seteditform({...editform,harga:0})
+    }
+    if(Number(e.target.value)){
+        if(editform.harga===0){
+          seteditform({...editform,harga:e.target.value[1]})
+        }else{
+          seteditform({...editform,harga:e.target.value})    
+        }
+    }
+  }
+
+  const dateformat=(n)=>{
+    var today = new Date(n);
+    var dd = String(today.getDate()).padStart(2, '0');
+    var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+    var yyyy = today.getFullYear();
+
+    today = mm + '-' + dd + '-' + yyyy;
+    return today
+  }
+  const dateeditformat=(n)=>{
+    var today = new Date(n);
+    var dd = String(today.getDate()).padStart(2, '0');
+    var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+    var yyyy = today.getFullYear();
+
+    today = yyyy + '-' + mm + '-' + dd;
+    return today
+  }
+
+  const readMore=(kata='')=>{
+    const hitungkata=kata.split(' ').filter((val)=>val!=='').length
+    if(hitungkata>10){
+      var kataarray=kata.split(' ').map((val,index)=>index<11?val:'')
+      var katafinale=kataarray.join(' ')
+      return (
+        <>
+        {katafinale}
+        <span style={{color:'red'}}>Read more ..</span>
+        </>
+      )
+    }
+    return kata
+
+  }
+
+  const OnAdddataClick=()=>{
+    var namatrip = addform.namaTrip.current.value
+    var gambar = addform.gambar.current.value
+    var tanggalmulai=addform.tanggalmulai.current.value
+    var tanggalberakhir=addform.tanggalberakhir.current.value
+    var harga=addform.harga
+    var deskripsi=addform.descripsi.current.value
+    var obj={
+      namatrip,
+      gambar,
+      tanggalmulai:new Date(tanggalmulai).getTime(),
+      tanggalberakhir:new Date(tanggalberakhir).getTime(),
+      harga,
+      deskripsi
+    }
+    if(obj.tanggalmulai>obj.tanggalberakhir || obj.tanggalmulai<new Date().getTime()){
+      console.log('data tidak boleh masuk')
+    }else{
+      axios.post(`${API_URL}/products`,obj)
+      .then(()=>{
+        axios.get(`${API_URL}/products`)
+        .then((res)=>{
+          setProduct(res.data)
+          setaddform({...addform,harga:''})
+          setModal(false)
+        }).catch((err)=>{
+          console.log(err)
+        })
+      }).catch((err)=>{
+        console.log(err)
+      })
+    }
+  }
+
+  const Oneditclick=  (index)=>{
+    setindexedit(index)
+    seteditform({...editform,harga:product[indexedit].harga})
+    setModaledit(true)
+  }
+
+  const onSaveeditClick =(id)=>{
+    var objedit={
+      namatrip:editform.namaTrip.current.value,
+      gambar:editform.gambar.current.value,
+
+    }
+    // axios.put(`${API_URL}/products/${id}`,{objedit})
+    // .then(()=>{
+    //   axios.get(`${API_URL}/products`)
+    //     .then((res)=>{
+    //       setProduct(res.data)
+    //       seteditform({...editform,harga:''})
+    //       setModaledit(false)
+    //     }).catch((err)=>{
+    //       console.log(err)
+    //     })
+    // })
+  }
+  // https://adajejak.com/wp-content/uploads/2019/11/10153833-0istock-653953140_cover_1920x1200.jpg
+  const renderTable=()=>{
+    return product.map((val,index)=>{
+      return(
+        <TableRow key={val.id}>
+            <TableCell>{index+1}</TableCell>
+            <TableCell>{val.namatrip}</TableCell>
+            <TableCell>
+              <div style={{maxWidth:'200px'}}>
+                <img width='100%' height='100%' src={val.gambar}/>
+              </div>
+            </TableCell>
+            <TableCell>{dateformat(val.tanggalmulai)}</TableCell>
+            <TableCell>{dateformat(val.tanggalberakhir)}</TableCell>
+            <TableCell>{priceFormatter(val.harga)}</TableCell>
+            <TableCell>{readMore(val.deskripsi)}</TableCell>
+            <TableCell>
+              <span style={{fontSize:30}} className='text-danger mr-3'><MdDeleteForever/></span>
+              <span style={{fontSize:30}} onClick={()=>Oneditclick(index)} className='text-primary ml-3'><BiEdit/></span>  
+            </TableCell>
+        </TableRow>
+      )
+    })
+  }
 
   const toggle = () => setModal(!modal);
+  const toggleedit = () => setModaledit(!modaledit);
+
   return (
       <>
         <Modal isOpen={modal} toggle={toggle} >
-            <ModalHeader toggle={toggle}>Modal title</ModalHeader>
+            <ModalHeader toggle={toggle}>Add data</ModalHeader>
             <ModalBody>
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+               <input type='text' ref={addform.namaTrip} placeholder='Masukkan Nama' className='form-control mb-2'/>
+               <input type='text' ref={addform.gambar} placeholder='Masukkan Gambar' className='form-control mb-2'/>
+               <label className='ml-1'>
+                 Tanggal mulai
+               </label>
+               <input type='date' ref={addform.tanggalmulai} placeholder='Masukkan tanggal' className='form-control mb-2'/>
+               <label className='ml-1'>
+                 Tanggal berakhir
+               </label>
+               <input type='date' ref={addform.tanggalberakhir} placeholder='tanggal berakhir' className='form-control mb-2'/>
+               <input type='text' onChange={onhargachange} placeholder='Rp....' value={addform.harga} className='form-control mb-2'/>
+               <textarea className='form-control mb-2' ref={addform.descripsi} placeholder='deskripsi' cols="30" rows="7"></textarea>
             </ModalBody>
             <ModalFooter>
-                <Button color="primary" onClick={toggle}>Do Something</Button>{' '}
+                <Button color="primary" onClick={OnAdddataClick}>Do Something</Button>
                 <Button color="secondary" onClick={toggle}>Cancel</Button>
             </ModalFooter>
         </Modal>
+        {
+          product.length?
+        
+            <Modal isOpen={modaledit} toggle={toggleedit} >
+                <ModalHeader toggle={toggleedit}>edit data {product.length?product[indexedit].namatrip:''}</ModalHeader>
+                <ModalBody>
+                   <input type='text' defaultValue={product[indexedit].namatrip} ref={editform.namaTrip} placeholder='Masukkan Nama' className='form-control mb-2'/>
+                   <input type='text' defaultValue={product[indexedit].gambar} ref={editform.gambar} placeholder='Masukkan Gambar' className='form-control mb-2'/>
+                   <label className='ml-1'>
+                     Tanggal mulai
+                   </label>
+                   <input type='date' defaultValue={dateeditformat(product[indexedit].tanggalmulai)}  ref={editform.tanggalmulai} placeholder='Masukkan tanggal' className='form-control mb-2'/>
+                   <label className='ml-1'>
+                     Tanggal berakhir
+                   </label>
+                   <input type='date' defaultValue={dateeditformat(product[indexedit].tanggalberakhir)} ref={editform.tanggalberakhir} placeholder='tanggal berakhir' className='form-control mb-2'/>
+                   <input type='text' onChange={onhargachangeedit}  value={editform.harga}  placeholder='Rp....'  className='form-control mb-2'/>
+                   <textarea className='form-control mb-2' ref={editform.descripsi} placeholder='deskripsi' cols="30" rows="7"></textarea>
+                </ModalBody>
+                <ModalFooter>
+                    <Button color="primary" onClick={()=>onSaveeditClick(product[indexedit].id)}>save</Button>
+                    <Button color="secondary" onClick={toggleedit}>Cancel</Button>
+                </ModalFooter>
+            </Modal>
+          :
+          null
+        }
         <Header/>
         <div className='px-5'>
             <div className="my-3 btn btn-outline-primary" onClick={toggle}>
                 Add data
             </div>
             <Paper className={classes.root}>
-            <TableContainer className={classes.container}>
-                <Table stickyHeader aria-label="sticky table">
-                <TableHead>
-                    <TableRow>
-                    {columns.map((column) => (
-                        <TableCell
-                        key={column.id}
-                        align={column.align}
-                        style={{ minWidth: column.minWidth }}
-                        >
-                        {column.label}
-                        </TableCell>
-                    ))}
-                    </TableRow>
-                </TableHead>
-                <TableBody>
-                    {rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
-                    return (
-                        <TableRow hover role="checkbox" tabIndex={-1} key={row.code}>
-                        {columns.map((column) => {
-                            const value = row[column.id];
-                            return (
-                            <TableCell key={column.id} align={column.align}>
-                                {column.format && typeof value === 'number' ? column.format(value) : value}
-                            </TableCell>
-                            );
-                        })}
-                        </TableRow>
-                    );
-                    })}
-                </TableBody>
-                </Table>
-            </TableContainer>
-            <TablePagination
-                rowsPerPageOptions={[10, 25, 100]}
-                component="div"
-                count={rows.length}
-                rowsPerPage={rowsPerPage}
-                page={page}
-                onChangePage={handleChangePage}
-                onChangeRowsPerPage={handleChangeRowsPerPage}
-            />
+              <TableContainer className={classes.container}>
+                  <Table stickyHeader aria-label="sticky table">
+                  <TableHead>
+                      <TableRow>
+                        <TableCell>No.</TableCell>
+                        <TableCell>Nama Trip</TableCell>
+                        <TableCell style={{width:'200px'}}>Gambar</TableCell>
+                        <TableCell>Tanggal mulai</TableCell>
+                        <TableCell>Tanggal berakhir</TableCell>
+                        <TableCell>Harga</TableCell>
+                        <TableCell style={{width:'300px'}}>Description</TableCell>
+                        <TableCell >action</TableCell>
+                      </TableRow>
+                  </TableHead>
+                  <TableBody>
+                      {renderTable()}
+                  </TableBody>
+                  </Table>
+              </TableContainer>
             </Paper>
-
         </div>
       </>
   );
