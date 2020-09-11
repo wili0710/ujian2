@@ -4,4 +4,6 @@ export const priceFormatter = (num) => {
       currency: "IDR",
     }).format(num);
 };
+
+
 export const API_URL='http://localhost:4000'

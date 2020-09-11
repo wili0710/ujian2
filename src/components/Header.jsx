@@ -41,7 +41,9 @@ export default function ButtonAppBar() {
           <Link to='/manageAdmin' style={{textDecoration:'none',color:'white'}}>
             <Button color="inherit">Admin</Button>
           </Link>
-          <Button color="inherit">Login</Button>
+          <Link to='/login' style={{textDecoration:'none',color:'white'}}>
+            <Button color="inherit">Login</Button>
+          </Link>
         </Toolbar>
       </AppBar>
     </div>

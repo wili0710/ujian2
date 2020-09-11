@@ -1,5 +1,5 @@
 import React, {useState,useRef, useEffect} from 'react';
-import Header from './../components/Header'
+import Header from '../../components/Header'
 import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Table from '@material-ui/core/Table';
@@ -11,17 +11,9 @@ import {MdDeleteForever} from 'react-icons/md'
 import {BiEdit} from 'react-icons/bi'
 import TableRow from '@material-ui/core/TableRow';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
-import {priceFormatter, API_URL} from './../helpers/idrformat'
+import {priceFormatter, API_URL} from '../../helpers/idrformat'
+import ButtonUi from './../../components/button'
 import axios from 'axios'
-
-
-
-
-
-
-
-
-
 
 const useStyles = makeStyles({
   root: {
@@ -57,12 +49,16 @@ export default function StickyHeadTable() {
   const [product,setProduct]=useState([])
 
   useEffect(()=>{
-    axios.get(`${API_URL}/products`)
-    .then((res)=>{
-      setProduct(res.data)
-    }).catch((err)=>{
-      console.log(err)
-    })
+    const fetch=()=>{
+      axios.get(`${API_URL}/products`)
+      .then((res)=>{
+        setProduct(res.data)
+        seteditform({...editform,harga:res.data[0].harga})
+      }).catch((err)=>{
+        console.log(err)
+      })
+    }
+    fetch()
   },[])
 
 
@@ -114,7 +110,7 @@ export default function StickyHeadTable() {
   const readMore=(kata='')=>{
     const hitungkata=kata.split(' ').filter((val)=>val!=='').length
     if(hitungkata>10){
-      var kataarray=kata.split(' ').map((val,index)=>index<11?val:'')
+      var kataarray=kata.split(' ').map((val,index)=>index<11?val:'').filter((val)=>val!=='')
       var katafinale=kataarray.join(' ')
       return (
         <>
@@ -161,31 +157,49 @@ export default function StickyHeadTable() {
     }
   }
 
-  const Oneditclick=  (index)=>{
+  // useEffect(()=>{
+  //   if(product.length){
+  //     seteditform({...editform,harga:product[indexedit].harga})
+  //   }
+  // },[indexedit])
+
+  const Oneditclick= (index)=>{
     setindexedit(index)
-    seteditform({...editform,harga:product[indexedit].harga})
+    seteditform({...editform,harga:product[index].harga})
     setModaledit(true)
+    // setTimeout(() => {
+    // }, 1000);
   }
 
   const onSaveeditClick =(id)=>{
-    var objedit={
-      namatrip:editform.namaTrip.current.value,
-      gambar:editform.gambar.current.value,
-
+    var namatrip = editform.namaTrip.current.value
+    var gambar = editform.gambar.current.value
+    var tanggalmulai=editform.tanggalmulai.current.value
+    var tanggalberakhir=editform.tanggalberakhir.current.value
+    var harga=editform.harga
+    var deskripsi=editform.descripsi.current.value
+    var obj={
+      namatrip,
+      gambar,
+      tanggalmulai:new Date(tanggalmulai).getTime(),
+      tanggalberakhir:new Date(tanggalberakhir).getTime(),
+      harga,
+      deskripsi
     }
-    // axios.put(`${API_URL}/products/${id}`,{objedit})
-    // .then(()=>{
-    //   axios.get(`${API_URL}/products`)
-    //     .then((res)=>{
-    //       setProduct(res.data)
-    //       seteditform({...editform,harga:''})
-    //       setModaledit(false)
-    //     }).catch((err)=>{
-    //       console.log(err)
-    //     })
-    // })
+  
+    axios.put(`${API_URL}/products/${id}`,obj)
+    .then(()=>{
+      axios.get(`${API_URL}/products`)
+        .then((res)=>{
+          setProduct(res.data)
+          seteditform({...editform,harga:''})
+          setModaledit(false)
+        }).catch((err)=>{
+          console.log(err)
+        })
+    })
   }
-  // https://adajejak.com/wp-content/uploads/2019/11/10153833-0istock-653953140_cover_1920x1200.jpg
+  
   const renderTable=()=>{
     return product.map((val,index)=>{
       return(
@@ -194,7 +208,7 @@ export default function StickyHeadTable() {
             <TableCell>{val.namatrip}</TableCell>
             <TableCell>
               <div style={{maxWidth:'200px'}}>
-                <img width='100%' height='100%' src={val.gambar}/>
+                <img width='100%' height='100%' src={val.gambar} alt={val.namatrip}/>
               </div>
             </TableCell>
             <TableCell>{dateformat(val.tanggalmulai)}</TableCell>
@@ -238,7 +252,6 @@ export default function StickyHeadTable() {
         </Modal>
         {
           product.length?
-        
             <Modal isOpen={modaledit} toggle={toggleedit} >
                 <ModalHeader toggle={toggleedit}>edit data {product.length?product[indexedit].namatrip:''}</ModalHeader>
                 <ModalBody>
@@ -252,8 +265,8 @@ export default function StickyHeadTable() {
                      Tanggal berakhir
                    </label>
                    <input type='date' defaultValue={dateeditformat(product[indexedit].tanggalberakhir)} ref={editform.tanggalberakhir} placeholder='tanggal berakhir' className='form-control mb-2'/>
-                   <input type='text' onChange={onhargachangeedit}  value={editform.harga}  placeholder='Rp....'  className='form-control mb-2'/>
-                   <textarea className='form-control mb-2' ref={editform.descripsi} placeholder='deskripsi' cols="30" rows="7"></textarea>
+                   <input type='text' onChange={onhargachangeedit} value={editform.harga}  placeholder='Rp....'  className='form-control mb-2'/>
+                   <textarea className='form-control mb-2' defaultValue={product[indexedit].deskripsi} ref={editform.descripsi} placeholder='deskripsi' cols="30" rows="7"></textarea>
                 </ModalBody>
                 <ModalFooter>
                     <Button color="primary" onClick={()=>onSaveeditClick(product[indexedit].id)}>save</Button>
@@ -265,9 +278,9 @@ export default function StickyHeadTable() {
         }
         <Header/>
         <div className='px-5'>
-            <div className="my-3 btn btn-outline-primary" onClick={toggle}>
-                Add data
-            </div>
+            <ButtonUi onClick={toggle} className='my-3' >
+                Add Data
+            </ButtonUi>
             <Paper className={classes.root}>
               <TableContainer className={classes.container}>
                   <Table stickyHeader aria-label="sticky table">
