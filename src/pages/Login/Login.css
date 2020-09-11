@@ -6,3 +6,7 @@
     color: whitesmoke;
     flex-direction: column;
 }
+
+.login-placeholder::placeholder{
+    color: white !important;
+}   

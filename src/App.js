@@ -9,7 +9,9 @@ import {LoginFunc} from './redux/Actions'
 import {API_URL} from './helpers/idrformat'
 import Axios from 'axios'
 function App(props) {
+
   const [loading,setloading]=useState(true)
+
   useEffect(()=>{
     var id=localStorage.getItem('id')
     if(id){ 
@@ -28,7 +30,6 @@ function App(props) {
   if(loading){
     return(
       <div>Loadinggg</div>
-
     )
   }
   return (

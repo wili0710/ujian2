@@ -5,13 +5,18 @@ import { withStyles } from '@material-ui/core/styles';
 import Axios from 'axios'
 import TextField from '@material-ui/core/TextField';
 import {API_URL} from './../../helpers/idrformat'
-import { Alert } from 'reactstrap';
 import {connect} from 'react-redux';
 import {Redirect} from 'react-router-dom'
 import {LoginFunc} from './../../redux/Actions'
 const Styles={
     root:{
-   
+        'input': {
+            '&::placeholder': {
+           
+              color: 'blue'
+            },
+        },
+
         '& label.Mui-focused': {
             color: 'white',
           },
@@ -42,7 +47,7 @@ class Login extends Component {
     state = {
         username:createRef(),
         password:createRef(),
-        alert:''
+        alert:'cfcf'
     }
 
     OnLoginClick=()=>{
@@ -81,17 +86,40 @@ class Login extends Component {
                     <div className='login-kotak d-flex px-4'>
                         <h1 className='align-self-center'>Login</h1>
                         <div className='mt-3'>
-                            <TextField className={classes.root} inputRef={this.state.username} label="Username" fullWidth='true' variant="outlined" size='small' />
+                            <TextField 
+                                inputProps={{ 
+                                    className:'text-white login-placeholder'
+                                }} 
+                                InputLabelProps={{
+                                    className:'text-white'
+                                }} 
+                                className={classes.root} 
+                                inputRef={this.state.username} 
+                                label="Username" 
+                                fullWidth='true' 
+                                variant="outlined" 
+                                size='small' 
+                            />
                         </div>
                         <div className='mt-3'>
-                            <TextField className={classes.root} inputRef={this.state.password} type="password"  label="Password" fullWidth='true' variant="outlined" size='small' />
+                            <TextField 
+                                inputProps={{ className:'text-white'}} 
+                                className={classes.root} 
+                                inputRef={this.state.password} 
+                                InputLabelProps={{
+                                    className:'text-white'
+                                }}
+                                type="password"  
+                                label="Password" 
+                                fullWidth='true' 
+                                variant="outlined" 
+                                size='small' 
+                            />
                         </div>
                         <div className='mt-3 mb-2'>
                             {
                                 this.state.alert?
-                                <Alert color="danger">
-                                {this.state.alert}<span classname='float-right' onClick={()=>this.setState({alert:''})}>x</span>
-                                </Alert>
+                                <div className='alert alert-danger mt-3'>{this.state.alert} <span onClick={()=>this.setState({alert:''})} style={{fontWeight:'bolder',cursor:'pointer',float:'right'}}>x</span></div>
                                 :
                                 null
                             }
