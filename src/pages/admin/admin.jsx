@@ -14,7 +14,9 @@ import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import {priceFormatter, API_URL} from '../../helpers/idrformat'
 import ButtonUi from './../../components/button'
 import axios from 'axios'
-
+import {connect} from 'react-redux'
+// import from 'react-router-dom'
+import Notfound from './../notfound'
 const useStyles = makeStyles({
   root: {
     width: '100%',
@@ -24,7 +26,7 @@ const useStyles = makeStyles({
   },
 });
 
-export default function StickyHeadTable() {
+ function StickyHeadTable(props) {
   const classes = useStyles();
   const [modal, setModal] = useState(false);
   const [modaledit, setModaledit] = useState(false);
@@ -227,82 +229,96 @@ export default function StickyHeadTable() {
   const toggle = () => setModal(!modal);
   const toggleedit = () => setModaledit(!modaledit);
 
-  return (
-      <>
-        <Modal isOpen={modal} toggle={toggle} >
-            <ModalHeader toggle={toggle}>Add data</ModalHeader>
-            <ModalBody>
-               <input type='text' ref={addform.namaTrip} placeholder='Masukkan Nama' className='form-control mb-2'/>
-               <input type='text' ref={addform.gambar} placeholder='Masukkan Gambar' className='form-control mb-2'/>
-               <label className='ml-1'>
-                 Tanggal mulai
-               </label>
-               <input type='date' ref={addform.tanggalmulai} placeholder='Masukkan tanggal' className='form-control mb-2'/>
-               <label className='ml-1'>
-                 Tanggal berakhir
-               </label>
-               <input type='date' ref={addform.tanggalberakhir} placeholder='tanggal berakhir' className='form-control mb-2'/>
-               <input type='text' onChange={onhargachange} placeholder='Rp....' value={addform.harga} className='form-control mb-2'/>
-               <textarea className='form-control mb-2' ref={addform.descripsi} placeholder='deskripsi' cols="30" rows="7"></textarea>
-            </ModalBody>
-            <ModalFooter>
-                <Button color="primary" onClick={OnAdddataClick}>Do Something</Button>
-                <Button color="secondary" onClick={toggle}>Cancel</Button>
-            </ModalFooter>
-        </Modal>
-        {
-          product.length?
-            <Modal isOpen={modaledit} toggle={toggleedit} >
-                <ModalHeader toggle={toggleedit}>edit data {product.length?product[indexedit].namatrip:''}</ModalHeader>
-                <ModalBody>
-                   <input type='text' defaultValue={product[indexedit].namatrip} ref={editform.namaTrip} placeholder='Masukkan Nama' className='form-control mb-2'/>
-                   <input type='text' defaultValue={product[indexedit].gambar} ref={editform.gambar} placeholder='Masukkan Gambar' className='form-control mb-2'/>
-                   <label className='ml-1'>
-                     Tanggal mulai
-                   </label>
-                   <input type='date' defaultValue={dateeditformat(product[indexedit].tanggalmulai)}  ref={editform.tanggalmulai} placeholder='Masukkan tanggal' className='form-control mb-2'/>
-                   <label className='ml-1'>
-                     Tanggal berakhir
-                   </label>
-                   <input type='date' defaultValue={dateeditformat(product[indexedit].tanggalberakhir)} ref={editform.tanggalberakhir} placeholder='tanggal berakhir' className='form-control mb-2'/>
-                   <input type='text' onChange={onhargachangeedit} value={editform.harga}  placeholder='Rp....'  className='form-control mb-2'/>
-                   <textarea className='form-control mb-2' defaultValue={product[indexedit].deskripsi} ref={editform.descripsi} placeholder='deskripsi' cols="30" rows="7"></textarea>
-                </ModalBody>
-                <ModalFooter>
-                    <Button color="primary" onClick={()=>onSaveeditClick(product[indexedit].id)}>save</Button>
-                    <Button color="secondary" onClick={toggleedit}>Cancel</Button>
-                </ModalFooter>
-            </Modal>
-          :
-          null
-        }
-        <Header/>
-        <div className='px-5'>
-            <ButtonUi onClick={toggle} className='my-3' >
-                Add Data
-            </ButtonUi>
-            <Paper className={classes.root}>
-              <TableContainer className={classes.container}>
-                  <Table stickyHeader aria-label="sticky table">
-                  <TableHead>
-                      <TableRow>
-                        <TableCell>No.</TableCell>
-                        <TableCell>Nama Trip</TableCell>
-                        <TableCell style={{width:'200px'}}>Gambar</TableCell>
-                        <TableCell>Tanggal mulai</TableCell>
-                        <TableCell>Tanggal berakhir</TableCell>
-                        <TableCell>Harga</TableCell>
-                        <TableCell style={{width:'300px'}}>Description</TableCell>
-                        <TableCell >action</TableCell>
-                      </TableRow>
-                  </TableHead>
-                  <TableBody>
-                      {renderTable()}
-                  </TableBody>
-                  </Table>
-              </TableContainer>
-            </Paper>
-        </div>
-      </>
-  );
+  
+    return (
+        <>
+          <Modal isOpen={modal} toggle={toggle} >
+              <ModalHeader toggle={toggle}>Add data</ModalHeader>
+              <ModalBody>
+                 <input type='text' ref={addform.namaTrip} placeholder='Masukkan Nama' className='form-control mb-2'/>
+                 <input type='text' ref={addform.gambar} placeholder='Masukkan Gambar' className='form-control mb-2'/>
+                 <label className='ml-1'>
+                   Tanggal mulai
+                 </label>
+                 <input type='date' ref={addform.tanggalmulai} placeholder='Masukkan tanggal' className='form-control mb-2'/>
+                 <label className='ml-1'>
+                   Tanggal berakhir
+                 </label>
+                 <input type='date' ref={addform.tanggalberakhir} placeholder='tanggal berakhir' className='form-control mb-2'/>
+                 <input type='text' onChange={onhargachange} placeholder='Rp....' value={addform.harga} className='form-control mb-2'/>
+                 <textarea className='form-control mb-2' ref={addform.descripsi} placeholder='deskripsi' cols="30" rows="7"></textarea>
+              </ModalBody>
+              <ModalFooter>
+                  <Button color="primary" onClick={OnAdddataClick}>Do Something</Button>
+                  <Button color="secondary" onClick={toggle}>Cancel</Button>
+              </ModalFooter>
+          </Modal>
+          {
+            product.length?
+              <Modal isOpen={modaledit} toggle={toggleedit} >
+                  <ModalHeader toggle={toggleedit}>edit data {product.length?product[indexedit].namatrip:''}</ModalHeader>
+                  <ModalBody>
+                     <input type='text' defaultValue={product[indexedit].namatrip} ref={editform.namaTrip} placeholder='Masukkan Nama' className='form-control mb-2'/>
+                     <input type='text' defaultValue={product[indexedit].gambar} ref={editform.gambar} placeholder='Masukkan Gambar' className='form-control mb-2'/>
+                     <label className='ml-1'>
+                       Tanggal mulai
+                     </label>
+                     <input type='date' defaultValue={dateeditformat(product[indexedit].tanggalmulai)}  ref={editform.tanggalmulai} placeholder='Masukkan tanggal' className='form-control mb-2'/>
+                     <label className='ml-1'>
+                       Tanggal berakhir
+                     </label>
+                     <input type='date' defaultValue={dateeditformat(product[indexedit].tanggalberakhir)} ref={editform.tanggalberakhir} placeholder='tanggal berakhir' className='form-control mb-2'/>
+                     <input type='text' onChange={onhargachangeedit} value={editform.harga}  placeholder='Rp....'  className='form-control mb-2'/>
+                     <textarea className='form-control mb-2' defaultValue={product[indexedit].deskripsi} ref={editform.descripsi} placeholder='deskripsi' cols="30" rows="7"></textarea>
+                  </ModalBody>
+                  <ModalFooter>
+                      <Button color="primary" onClick={()=>onSaveeditClick(product[indexedit].id)}>save</Button>
+                      <Button color="secondary" onClick={toggleedit}>Cancel</Button>
+                  </ModalFooter>
+              </Modal>
+            :
+            null
+          }
+          <Header/>
+          <div className='px-5'>
+              <ButtonUi onClick={toggle} className='my-3' >
+                  Add Data
+              </ButtonUi>
+              <Paper className={classes.root}>
+                <TableContainer className={classes.container}>
+                    <Table stickyHeader aria-label="sticky table">
+                    <TableHead>
+                        <TableRow>
+                          <TableCell>No.</TableCell>
+                          <TableCell>Nama Trip</TableCell>
+                          <TableCell style={{width:'200px'}}>Gambar</TableCell>
+                          <TableCell>Tanggal mulai</TableCell>
+                          <TableCell>Tanggal berakhir</TableCell>
+                          <TableCell>Harga</TableCell>
+                          <TableCell style={{width:'300px'}}>Description</TableCell>
+                          <TableCell >action</TableCell>
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        {renderTable()}
+                    </TableBody>
+                    </Table>
+                </TableContainer>
+              </Paper>
+          </div>
+        </>
+    );
+  
 }
+const MapstatetoProps=({Auth})=>{
+  return{
+    // ...Auth,
+    username:Auth.username,
+    isLogin:Auth.isLogin,
+    role:Auth.role
+    // username:Auth.username
+    // username:'dino',
+    // sd
+  }
+}
+export default connect(MapstatetoProps) (StickyHeadTable);

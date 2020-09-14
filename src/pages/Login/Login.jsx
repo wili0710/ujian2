@@ -47,7 +47,7 @@ class Login extends Component {
     state = {
         username:createRef(),
         password:createRef(),
-        alert:'cfcf'
+        alert:''
     }
 
     OnLoginClick=()=>{
@@ -80,7 +80,7 @@ class Login extends Component {
         return (
             <div className='row m-0 p-0'>
                 <div className='col-md-6 m-0 p-0' style={{height:'100vh'}} >
-                    <img width='100%' height='100%' src={Foto} alt={'foto'}/>
+                    <img width='100%' height='100%' style={{objectFit:'cover'}} src={Foto} alt={'foto'}/>
                 </div>
                 <div className='col-md-6 m-0 p-0 d-flex justify-content-center align-items-center' style={{background:'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)'}}>
                     <div className='login-kotak d-flex px-4'>
@@ -119,7 +119,7 @@ class Login extends Component {
                         <div className='mt-3 mb-2'>
                             {
                                 this.state.alert?
-                                <div className='alert alert-danger mt-3'>{this.state.alert} <span onClick={()=>this.setState({alert:''})} style={{fontWeight:'bolder',cursor:'pointer',float:'right'}}>x</span></div>
+                                <div className='alert alert-danger'>{this.state.alert} <span onClick={()=>this.setState({alert:''})} style={{fontWeight:'bolder',cursor:'pointer',float:'right'}}>x</span></div>
                                 :
                                 null
                             }

@@ -4,6 +4,7 @@ import TravelBook from '../../assets/travelbook.svg'
 import Travelers from '../../assets/travelers.svg'
 import Header from '../../components/Header'
 import ButtonUi from '../../components/button'
+import { Link } from "react-router-dom";
 import './home.css'
 class Home extends Component {
     state = {  }
@@ -12,16 +13,18 @@ class Home extends Component {
             <div>
                 <Header/>
                 <div style={{width:'100%', height:'90vh'}}>
-                    <img src={Homescreen} width='100%' height='100%'/>
+                    <img src={Homescreen} style={{objectFit:'cover'}} width='100%' height='100%'/>
                 </div>
                 <div className='text-white d-flex align-items-center px-5' style={{height:'8vh',backgroundColor:'#afafaf',justifyContent:"space-between"}}>
                     <div>
                         promo    
                     </div> 
                     <div>
-                        <ButtonUi>
-                            Lihat Promo
-                        </ButtonUi>
+                        <Link to='/products'>
+                            <ButtonUi>
+                                Lihat Promo
+                            </ButtonUi>
+                        </Link>
                     </div>
                 </div>
                 <div className='row p-0 m-0 mt-4'>

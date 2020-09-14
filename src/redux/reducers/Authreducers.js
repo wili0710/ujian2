@@ -4,7 +4,23 @@ const INITIAL_STATE={
     id:0,
     isLogin:false
 }
+// var obj={
+//     username:'dino',
+//     password:'abcd',
+//     id:1,
+//     role:'user'
+// }
 
+// var obj2={
+//     ...INITIAL_STATE,
+//     ...obj,
+//     isLogin:true
+// }
+// {username:'dino',password:'abcd',id:1,role:'user',isLogin:true}
+// var obj= {
+//     nama:'ddi'
+// }
+// var obj2={...obj,...{usia:'dasdsad',nama:'bayu'}}// obj2={nama:bayu,usia:dasadasd}
 
 export default (state=INITIAL_STATE,action)=>{
     switch (action.type) {
