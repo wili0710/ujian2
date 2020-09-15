@@ -4,13 +4,13 @@
       "id": 1,
       "username": "dino",
       "password": "abcd",
-      "role":"user"
+      "role": "user"
     },
     {
       "id": 2,
       "username": "admin",
       "password": "root",
-      "role":"admin"
+      "role": "admin"
     }
   ],
   "products": [
@@ -60,13 +60,30 @@
       "id": 5
     }
   ],
-  "carts":[
-
+  "carts": [],
+  "transactions": [
+    {
+      "status": "WaitingPayment",
+      "checkoutDate": 1600146246030,
+      "userId": 1,
+      "tanggalPembayaran": "",
+      "id": 1
+    }
   ],
-  "transactions":[
-
-  ],
-  "transactionsdetails":[
-    
+  "transactionsdetails": [
+    {
+      "transactionId": 1,
+      "productId": 1,
+      "price": 200000,
+      "qty": 2,
+      "id": 1
+    },
+    {
+      "transactionId": 1,
+      "productId": 3,
+      "price": 200000,
+      "qty": 3,
+      "id": 2
+    }
   ]
 }

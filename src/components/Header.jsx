@@ -1,5 +1,5 @@
 import React,{useState} from 'react';
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles,withStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
@@ -8,9 +8,11 @@ import IconButton from '@material-ui/core/IconButton';
 import FlightTakeoff from '@material-ui/icons/FlightTakeoff'
 import {Link,NavLink} from 'react-router-dom'
 import {connect} from 'react-redux'
-import {FaUserAstronaut} from 'react-icons/fa'
+import {FaUserAstronaut,FaCartArrowDown} from 'react-icons/fa'
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
+import Badge from '@material-ui/core/Badge';
+
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
@@ -25,11 +27,21 @@ const useStyles = makeStyles((theme) => ({
     background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)'
   }
 }));
-
+const StyledBadge = withStyles(() => ({
+  badge: {
+    right: -3,
+    top: 5,
+    color:'white',
+    fontSize:11,
+    background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)',
+    
+    padding: '0 0px',
+  },
+}))(Badge);
 function ButtonAppBar({username,isLogin,role}) {
   const classes = useStyles();
   const [anchorEl,setopen]=useState(null)
-
+  
   return (
     <div className={classes.root}>
       <AppBar className={classes.warna} position='static'>
@@ -43,12 +55,20 @@ function ButtonAppBar({username,isLogin,role}) {
             JoinTrip
           </Typography>
           {
-
-          }
-          {
             role==='admin'?
             <Link to='/manageAdmin' style={{textDecoration:'none',color:'white'}}>
               <Button color="inherit">Admin</Button>
+            </Link>
+            :
+            role==='user'?
+            <Link to='/cart' style={{textDecoration:'none',color:'white'}}>
+              <Button color="inherit">
+                <StyledBadge badgeContent={1} oolor='secondary' >
+                  <span style={{fontSize:20}}>
+                    <FaCartArrowDown />
+                  </span>
+                </StyledBadge>
+              </Button>
             </Link>
             :
             null

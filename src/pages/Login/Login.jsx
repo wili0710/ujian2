@@ -7,7 +7,7 @@ import TextField from '@material-ui/core/TextField';
 import {API_URL} from './../../helpers/idrformat'
 import {connect} from 'react-redux';
 import {Redirect} from 'react-router-dom'
-import {LoginFunc} from './../../redux/Actions'
+import {LoginFunc,LoginThunk,Clearfunc} from './../../redux/Actions'
 const Styles={
     root:{
         'input': {
@@ -54,21 +54,22 @@ class Login extends Component {
         const {username,password}=this.state
         var username1=username.current.value
         var password1=password.current.value
+        this.props.LoginThunk(username1,password1)
         // console.log(username1,password1)
-        Axios.get(`${API_URL}/users?username=${username1}&password=${password1}`)
-        .then((res)=>{
-            console.log('masuk sini')
-            console.log(res.data)
-            if(res.data.length){
-                localStorage.setItem('id',res.data[0].id)
-                this.props.LoginFunc(res.data[0])
-            }else{
-                console.log('user salah password')
-                this.setState({alert:'Password / Username salah bro'})
-            }
-        }).catch((err)=>{
-            console.log(err)
-        })
+        // Axios.get(`${API_URL}/users?username=${username1}&password=${password1}`)
+        // .then((res)=>{
+        //     console.log('masuk sini')
+        //     console.log(res.data)
+        //     if(res.data.length){
+        //         localStorage.setItem('id',res.data[0].id)
+        //         this.props.LoginFunc(res.data[0])
+        //     }else{
+        //         console.log('user salah password')
+        //         this.setState({alert:'Password / Username salah bro'})
+        //     }
+        // }).catch((err)=>{
+        //     console.log(err)
+        // })
     }
 
     render() { 
@@ -118,14 +119,14 @@ class Login extends Component {
                         </div>
                         <div className='mt-3 mb-2'>
                             {
-                                this.state.alert?
-                                <div className='alert alert-danger'>{this.state.alert} <span onClick={()=>this.setState({alert:''})} style={{fontWeight:'bolder',cursor:'pointer',float:'right'}}>x</span></div>
+                                this.props.Auth.error?
+                                <div className='alert alert-danger'>{this.props.Auth.error} <span onClick={this.props.Clearfunc} style={{fontWeight:'bolder',cursor:'pointer',float:'right'}}>x</span></div>
                                 :
                                 null
                             }
                         </div>
                         <div className=' align-self-end '>
-                            <button onClick={this.OnLoginClick} className='px-3 py-2 rounded text-white' style={{border:'white 1px solid',backgroundColor:'transparent'}}>
+                            <button disabled={this.props.Auth.isLoading} onClick={this.OnLoginClick} className='px-3 py-2 rounded text-white' style={{border:'white 1px solid',backgroundColor:'transparent'}}>
                                 Login
                             </button>
                         </div>
@@ -141,4 +142,4 @@ const Mapstatetoprops=(state)=>{
     }
 }
 
-export default withStyles(Styles) (connect(Mapstatetoprops,{LoginFunc})(Login));
+export default withStyles(Styles) (connect(Mapstatetoprops,{LoginFunc,LoginThunk,Clearfunc})(Login));

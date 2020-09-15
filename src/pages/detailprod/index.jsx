@@ -25,8 +25,16 @@ class DetailProd extends Component {
     }
 
     onAddToCart=()=>{
-        if(this.props.username){
-            
+        if(this.props.role==='admin'){
+            alert('jangan beli bro inget admin')
+        }else if(this.props.role==='user'){
+            Axios.post(`${API_URL}/carts`,{
+                userId:this.props.id,
+                productId:this.state.products.id,
+                qty: parseInt(this.state.qty.current.value)
+            }).then(()=>{
+                alert('berhasil masuk cart')
+            })
         }else{
             this.setState({isOpen:true})
         }

@@ -7,9 +7,9 @@ import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
 import {MdDeleteForever} from 'react-icons/md'
 import {BiEdit} from 'react-icons/bi'
-import TableRow from '@material-ui/core/TableRow';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import {priceFormatter, API_URL} from '../../helpers/idrformat'
 import ButtonUi from './../../components/button'

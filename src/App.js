@@ -14,6 +14,7 @@ import {connect} from 'react-redux'
 import {LoginFunc} from './redux/Actions'
 import {API_URL} from './helpers/idrformat'
 import Axios from 'axios'
+import Cart from './pages/cart'
 import DetailProd from './pages/detailprod'
 function App(props) {
 
@@ -57,6 +58,7 @@ function App(props) {
         <Route exact path='/login' component={Login}/>
         <Route exact path='/products' component={ListProd}/>
         <Route path='/products/:id' component={DetailProd}/>
+        <Route path='/cart' component={Cart}/>
         {renderProtectedroutesadmin()}
         <Route path='*' component={NotFound} />
       </Switch>
