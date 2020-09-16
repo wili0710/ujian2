@@ -6,6 +6,8 @@ import Axios from 'axios'
 import ButtonUi from './../../components/button'
 import { API_URL,dateformat } from '../../helpers/idrformat';
 import {connect} from 'react-redux'
+import {AddcartAction} from './../../redux/Actions'
+import {toast} from 'react-toastify'
 class DetailProd extends Component {
     state = {
         loading:true,
@@ -28,13 +30,35 @@ class DetailProd extends Component {
         if(this.props.role==='admin'){
             alert('jangan beli bro inget admin')
         }else if(this.props.role==='user'){
-            Axios.post(`${API_URL}/carts`,{
-                userId:this.props.id,
-                productId:this.state.products.id,
-                qty: parseInt(this.state.qty.current.value)
-            }).then(()=>{
-                alert('berhasil masuk cart')
-            })
+            if(this.state.qty.current.value){
+                Axios.post(`${API_URL}/carts`,{
+                    userId:this.props.id,
+                    productId:this.state.products.id,
+                    qty: parseInt(this.state.qty.current.value)
+                }).then(()=>{
+                    Axios.get(`${API_URL}/carts`,{
+                        params:{
+                            userId:this.props.id,
+                            _expand:'product'
+                        }
+                    }).then((res)=>{
+                        this.props.AddcartAction(res.data)
+                        alert('berhasil masuk cart')
+                    }).catch((err)=>{
+                        console.log(err)
+                    })
+                })
+            }else{
+                toast('salah broo harusnya qty disii', {
+                    position: "top-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                });
+            }
         }else{
             this.setState({isOpen:true})
         }
@@ -98,4 +122,4 @@ const MapstatetoProps=({Auth})=>{
         ...Auth
     }
 }
-export default connect(MapstatetoProps) (DetailProd);
+export default connect(MapstatetoProps,{AddcartAction}) (DetailProd);

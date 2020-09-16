@@ -1,10 +1,9 @@
-import React, { Component } from 'react';
+import React, { Component, createRef } from 'react';
 import Header from '../../components/Header'
 import {connect} from 'react-redux'
 import Axios from 'axios'
 import { API_URL, priceFormatter } from '../../helpers/idrformat';
 import Notfound from './../notfound'
-import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -14,13 +13,19 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import TableFooter from '@material-ui/core/TableFooter';
 import ButtonUi from './../../components/button'
-
+import {Modal,ModalHeader,ModalBody,ModalFooter} from 'reactstrap'
+import {AddcartAction} from './../../redux/Actions'
 class Cart extends Component {
     state = {
-        cart:[]
+        cart:[],
+        isOpen:false,
+        pilihan:0,
+        bukti:createRef(),
+        cc:createRef()
     }
     componentDidMount(){
         // Axios.get(`${API_URL}/carts?userId=${this.props.id}&_expand=product`)
+        console.log(this.props.id)
         Axios.get(`${API_URL}/carts`,{
             params:{
                 userId:this.props.id,
@@ -62,15 +67,25 @@ class Cart extends Component {
         })
     }
 
-    // transaction itu ada id,status,checkoutdate,userId,tanggalpembayaran
+    // transaction itu ada id,status,userId,tanggalpembayaran,metode,buktipembayaran,
     // transactionDetails id,transactionId,productId,price,qty
-
-    onCheckOutClick=()=>{
+    onBayarClick=()=>{
+        const {pilihan} =this.state
+        if(pilihan==='1'){
+            this.onbayarpakebukti()
+        }else if(pilihan==='2'){
+            this.onbayarpakeCC()
+        }else{
+            alert('pilih dulu tipe pembayarannya bro')
+        }
+    }
+    onbayarpakeCC=()=>{
         Axios.post(`${API_URL}/transactions`,{
-            status:'WaitingPayment',
-            checkoutDate:new Date().getTime(),
+            status:'Completed',
             userId:this.props.id,
-            tanggalPembayaran:''
+            tanggalPembayaran:new Date().getTime(),
+            metode:'cc',
+            buktipembayaran:this.state.cc.current.value
         }).then((res)=>{
             var arr=[]
             this.state.cart.forEach((val)=>{
@@ -96,7 +111,8 @@ class Cart extends Component {
                     })
                     .then((res3)=>{
                         console.log(res3.data)
-                        this.setState({cart:res3.data})
+                        this.props.AddcartAction([])
+                        this.setState({cart:res3.data,isOpen:false})
                     }).catch((err)=>{
                         console.log(err)
                     })
@@ -110,11 +126,131 @@ class Cart extends Component {
 
         })
     }
+    onbayarpakebukti=()=>{
+        Axios.post(`${API_URL}/transactions`,{
+            status:'WaitingAdmin',
+            userId:this.props.id,
+            tanggalPembayaran:new Date().getTime(),
+            metode:'upload',
+            buktipembayaran:this.state.bukti.current.value
+        }).then((res)=>{
+            var arr=[]
+            this.state.cart.forEach((val)=>{
+                arr.push(Axios.post(`${API_URL}/transactionsdetails`,{
+                    transactionId:res.data.id,
+                    productId:val.productId,
+                    price: parseInt(val.product.harga),
+                    qty:val.qty
+                }))
+            })
+            Axios.all(arr).then((res1)=>{
+                var deletearr=[]
+                this.state.cart.forEach((val)=>{
+                    deletearr.push(Axios.delete(`${API_URL}/carts/${val.id}`))
+                })
+                Axios.all(deletearr)
+                .then(()=>{
+                    Axios.get(`${API_URL}/carts`,{
+                        params:{
+                            userId:this.props.id,
+                            _expand:'product'
+                        }
+                    })
+                    .then((res3)=>{
+                        console.log(res3.data)
+                        this.props.AddcartAction([])
+                        this.setState({cart:res3.data,isOpen:false})
+                    }).catch((err)=>{
+                        console.log(err)
+                    })
+                }).catch((Err)=>{
+                    console.log(Err)
+                })
+            }).catch((err)=>{
+                console.log(err)
+            })
+        }).catch((err)=>{
+
+        })
+    }
+    onCheckOutClick=()=>{
+        this.setState({isOpen:true})
+        // Axios.post(`${API_URL}/transactions`,{
+        //     status:'WaitingPayment',
+        //     checkoutDate:new Date().getTime(),
+        //     userId:this.props.id,
+        //     tanggalPembayaran:''
+        // }).then((res)=>{
+        //     var arr=[]
+        //     this.state.cart.forEach((val)=>{
+        //         arr.push(Axios.post(`${API_URL}/transactionsdetails`,{
+        //             transactionId:res.data.id,
+        //             productId:val.productId,
+        //             price: parseInt(val.product.harga),
+        //             qty:val.qty
+        //         }))
+        //     })
+        //     Axios.all(arr).then((res1)=>{
+        //         var deletearr=[]
+        //         this.state.cart.forEach((val)=>{
+        //             deletearr.push(Axios.delete(`${API_URL}/carts/${val.id}`))
+        //         })
+        //         Axios.all(deletearr)
+        //         .then(()=>{
+        //             Axios.get(`${API_URL}/carts`,{
+        //                 params:{
+        //                     userId:this.props.id,
+        //                     _expand:'product'
+        //                 }
+        //             })
+        //             .then((res3)=>{
+        //                 console.log(res3.data)
+        //                 this.setState({cart:res3.data})
+        //             }).catch((err)=>{
+        //                 console.log(err)
+        //             })
+        //         }).catch((Err)=>{
+        //             console.log(Err)
+        //         })
+        //     }).catch((err)=>{
+        //         console.log(err)
+        //     })
+        // }).catch((err)=>{
+
+        // })
+    }
 
     render() {
         if(this.props.role==='user') {
             return (
                 <div>
+                    <Modal isOpen={this.state.isOpen} toggle={()=>this.setState({isOpen:false})}>
+                        <ModalHeader toggle={()=>this.setState({isOpen:false})}>Pembayaran</ModalHeader>
+                        <ModalBody>
+                            <select onChange={(e)=>this.setState({pilihan:e.target.value})} className='form-control' defaultValue={0} >
+                                <option value="0" hidden>Select payment</option>
+                                <option value="1">input bukti transfer</option>
+                                <option value="2">Credit card</option>
+                            </select>
+                            {
+                                this.state.pilihan==2?
+                                <input className='form-control' ref={this.state.cc} placeholder='masukkan cc'/>
+                                :
+                                this.state.pilihan==1?
+                                <input className='form-control' ref={this.state.bukti}  placeholder='input bukti pembayaran'/>
+                                :
+                                null
+                            }
+                            <div>
+                              Total Harga  {priceFormatter(this.renderTotalHarga())}
+                            </div>
+                        </ModalBody>
+                        <ModalFooter>
+                            <ButtonUi onClick={this.onBayarClick}>
+                                Bayar
+                            </ButtonUi>
+                        </ModalFooter>
+                    </Modal>
                     <Header/>
                     <div className=' pt-3' style={{paddingLeft:'10%',paddingRight:'10%'}}>
                         <Paper >
@@ -159,4 +295,4 @@ const MapstatetoProps=({Auth})=>{
         ...Auth
     }
 }
-export default connect(MapstatetoProps)(Cart);
+export default connect(MapstatetoProps,{AddcartAction})(Cart);

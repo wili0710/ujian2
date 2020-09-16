@@ -60,30 +60,61 @@
       "id": 5
     }
   ],
-  "carts": [],
+  "carts": [
+  ],
   "transactions": [
     {
-      "status": "WaitingPayment",
-      "checkoutDate": 1600146246030,
+      "status": "Completed",
       "userId": 1,
-      "tanggalPembayaran": "",
-      "id": 1
+      "tanggalPembayaran": 1600228677900,
+      "metode": "cc",
+      "buktipembayaran": "321321313123123",
+      "id": 2
+    },
+    {
+      "status": "WaitingAdmin",
+      "userId": 1,
+      "tanggalPembayaran": 1600229071836,
+      "metode": "upload",
+      "buktipembayaran": "https://www.pakaiatm.com/wp-content/uploads/2020/03/Contoh-Bukti-Transfer-BRI-Asli-atau-Palsu.jpg",
+      "id": 3
     }
   ],
   "transactionsdetails": [
     {
-      "transactionId": 1,
-      "productId": 1,
-      "price": 200000,
+      "transactionId": 2,
+      "productId": 2,
+      "price": 300002,
       "qty": 2,
-      "id": 1
+      "id": 3
     },
     {
-      "transactionId": 1,
+      "transactionId": 2,
+      "productId": 2,
+      "price": 300002,
+      "qty": 2,
+      "id": 4
+    },
+    {
+      "transactionId": 2,
       "productId": 3,
       "price": 200000,
-      "qty": 3,
-      "id": 2
+      "qty": 1,
+      "id": 5
+    },
+    {
+      "transactionId": 3,
+      "productId": 1,
+      "price": 200000,
+      "qty": 1,
+      "id": 6
+    },
+    {
+      "transactionId": 3,
+      "productId": 5,
+      "price": 999000,
+      "qty": 1,
+      "id": 7
     }
   ]
 }

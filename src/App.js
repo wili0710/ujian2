@@ -1,10 +1,7 @@
 import React, { useEffect,useState } from 'react';
 import Home from './pages/home/home'
 import './App.css';
-// import {
-//   Home,
-//   Admin
-// } from './pages'
+import {Loading} from './components'
 import ManageAdmin from './pages/admin/admin'
 import ListProd from './pages/Listprod'
 import NotFound from './pages/notfound'
@@ -16,6 +13,12 @@ import {API_URL} from './helpers/idrformat'
 import Axios from 'axios'
 import Cart from './pages/cart'
 import DetailProd from './pages/detailprod'
+import {toast} from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css' 
+// umum : register
+// user : history,
+// admin :confirm admin,
+toast.configure()
 function App(props) {
 
   const [loading,setloading]=useState(true)
@@ -25,11 +28,20 @@ function App(props) {
     if(id){ 
       Axios.get(`${API_URL}/users/${id}`)
       .then((res)=>{
-        props.LoginFunc(res.data)
+        Axios.get(`${API_URL}/carts`,{
+          params:{
+              userId:res.data.id,
+              _expand:'product'
+          }
+        }).then((res1)=>{
+            props.LoginFunc(res.data,res1.data)
+        }).catch((err)=>{
+            console.log(err)
+        }).finally(()=>{
+          setloading(false)
+        })
       }).catch((err)=>{
         console.log(err)
-      }).finally(()=>{
-        setloading(false)
       })
     }else{
       setloading(false)
@@ -37,7 +49,7 @@ function App(props) {
   },[])
   if(loading){
     return(
-      <div>Loadinggg</div>
+      <Loading/>
     )
   }
 
@@ -58,7 +70,7 @@ function App(props) {
         <Route exact path='/login' component={Login}/>
         <Route exact path='/products' component={ListProd}/>
         <Route path='/products/:id' component={DetailProd}/>
-        <Route path='/cart' component={Cart}/>
+        <Route exact path='/cart' component={Cart}/>
         {renderProtectedroutesadmin()}
         <Route path='*' component={NotFound} />
       </Switch>

@@ -38,10 +38,10 @@ const StyledBadge = withStyles(() => ({
     padding: '0 0px',
   },
 }))(Badge);
-function ButtonAppBar({username,isLogin,role}) {
+function ButtonAppBar({username,isLogin,role,cart}) {
   const classes = useStyles();
   const [anchorEl,setopen]=useState(null)
-  
+
   return (
     <div className={classes.root}>
       <AppBar className={classes.warna} position='static'>
@@ -63,7 +63,7 @@ function ButtonAppBar({username,isLogin,role}) {
             role==='user'?
             <Link to='/cart' style={{textDecoration:'none',color:'white'}}>
               <Button color="inherit">
-                <StyledBadge badgeContent={1} oolor='secondary' >
+                <StyledBadge badgeContent={cart.length} oolor='secondary' >
                   <span style={{fontSize:20}}>
                     <FaCartArrowDown />
                   </span>

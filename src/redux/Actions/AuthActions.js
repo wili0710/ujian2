@@ -1,20 +1,29 @@
 import Axios from 'axios'
 import { API_URL } from '../../helpers/idrformat'
-export const LoginFunc=(obj)=>{
+import {ADDCART} from './../Type'
+export const LoginFunc=(user,cart)=>{
     return{
         type:'LOGIN',
-        payload:obj
+        payload:user,
+        cart:cart
     }
 }
 
 export const Clearfunc=()=>{
-    // return (dispatch)=>{
-    //     dispatch({type:'CLEAR'})
-    // }
     return{
         type:'CLEAR'
     }
 }
+
+
+export const AddcartAction=(cart)=>{
+    return{
+        type:ADDCART,
+        cart:cart
+    }
+}
+
+
 export const LoginThunk=(username,password)=>{
     return (dispatch)=>{
         dispatch({type:'LOADING'})
@@ -25,8 +34,17 @@ export const LoginThunk=(username,password)=>{
             }
         }).then((res)=>{
             if(res.data.length){
-                localStorage.setItem('id',res.data[0].id)
-                dispatch({type:'LOGIN',payload:res.data[0]})
+                Axios.get(`${API_URL}/carts`,{
+                    params:{
+                        userId:res.data[0].id,
+                        _expand:'product'
+                    }
+                }).then((res1)=>{
+                    localStorage.setItem('id',res.data[0].id)
+                    dispatch({type:'LOGIN',payload:res.data[0],cart:res1.data})
+                }).catch((err)=>{
+                    dispatch({type:'Error',payload:'servernya error bro'})
+                })
             }else{
                 dispatch({type:'Error',payload:'kayaknya nb dari redux'})
             }
