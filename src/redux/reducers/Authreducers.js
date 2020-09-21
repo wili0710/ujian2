@@ -27,9 +27,13 @@ const INITIAL_STATE={
 // var obj2={...obj,...{usia:'dasdsad',nama:'bayu'}}// obj2={nama:bayu,usia:dasadasd}
 
 export default (state=INITIAL_STATE,action)=>{
+    console.log("jalan2") 
     switch (action.type) {
         case 'LOGIN':        
             return {...state,...action.payload,isLogin:true,isLoading:false,cart:action.cart}
+        case 'LOGOUT':
+            console.log("jalan")        
+            return {...state,...INITIAL_STATE}
         case 'Error':
             return{ ...state,error:action.payload,isLoading:false} 
         case 'LOADING':

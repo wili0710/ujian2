@@ -15,6 +15,7 @@ import TableFooter from '@material-ui/core/TableFooter';
 import ButtonUi from './../../components/button'
 import {Modal,ModalHeader,ModalBody,ModalFooter} from 'reactstrap'
 import {AddcartAction} from './../../redux/Actions'
+import Swal from 'sweetalert2';
 class Cart extends Component {
     state = {
         cart:[],
@@ -79,7 +80,44 @@ class Cart extends Component {
             alert('pilih dulu tipe pembayarannya bro')
         }
     }
+    credit=(input)=>{
+        var angka=0
+        var output=0
+        var y=input
+        var a
+        do {
+            a=y%(10)
+            var b
+            y=(y-a)/10
+            if(angka%2==1){
+                a*=2
+                if(a>9){
+                    b=a%10
+                    output+=(b+1)
+                }else{
+                    output+=a
+                }
+            }else{
+                output+=a
+            }
+            angka++
+        } while(y>0);
+        if(output%10==0){
+            return true
+        }else{
+            return false
+        }
+    }
     onbayarpakeCC=()=>{
+        if(!(this.credit(this.state.cc.current.value))){
+            return(
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'CC tidak valid',
+                  })
+            )
+        }
         Axios.post(`${API_URL}/transactions`,{
             status:'Completed',
             userId:this.props.id,

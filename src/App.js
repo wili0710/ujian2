@@ -15,6 +15,9 @@ import Cart from './pages/cart'
 import DetailProd from './pages/detailprod'
 import {toast} from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css' 
+import register from './pages/register/register';
+import history from './pages/history/history';
+import detailhistory from './pages/history/detailhistory';
 // umum : register
 // user : history,
 // admin :confirm admin,
@@ -68,6 +71,9 @@ function App(props) {
       <Switch>
         <Route exact path='/' component={Home}/>
         <Route exact path='/login' component={Login}/>
+        <Route exact path='/register' component={register}/>
+        <Route exact path='/history' component={history}/>
+        <Route exact path='/historydetail' component={detailhistory}/>
         <Route exact path='/products' component={ListProd}/>
         <Route path='/products/:id' component={DetailProd}/>
         <Route exact path='/cart' component={Cart}/>

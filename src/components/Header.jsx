@@ -12,6 +12,7 @@ import {FaUserAstronaut,FaCartArrowDown} from 'react-icons/fa'
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import Badge from '@material-ui/core/Badge';
+import {LogoutFunc} from './../redux/Actions'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -42,6 +43,11 @@ function ButtonAppBar({username,isLogin,role,cart}) {
   const classes = useStyles();
   const [anchorEl,setopen]=useState(null)
 
+  const OnLogoutClick=()=>{
+    LogoutFunc()
+    
+}
+
   return (
     <div className={classes.root}>
       <AppBar className={classes.warna} position='static'>
@@ -61,15 +67,20 @@ function ButtonAppBar({username,isLogin,role,cart}) {
             </Link>
             :
             role==='user'?
-            <Link to='/cart' style={{textDecoration:'none',color:'white'}}>
-              <Button color="inherit">
-                <StyledBadge badgeContent={cart.length} oolor='secondary' >
-                  <span style={{fontSize:20}}>
-                    <FaCartArrowDown />
-                  </span>
-                </StyledBadge>
-              </Button>
-            </Link>
+            <>
+              <Link to='/history' style={{textDecoration:'none',color:'white'}}>
+                <Button color="inherit" onClick={(e)=>setopen(e.currentTarget)}>History</Button>
+              </Link>
+              <Link to='/cart' style={{textDecoration:'none',color:'white'}}>
+                <Button color="inherit">
+                  <StyledBadge badgeContent={cart.length} oolor='secondary' >
+                    <span style={{fontSize:20}}>
+                      <FaCartArrowDown />
+                    </span>
+                  </StyledBadge>
+                </Button>
+              </Link>
+            </>
             :
             null
           }
@@ -87,13 +98,21 @@ function ButtonAppBar({username,isLogin,role,cart}) {
               >
                 <MenuItem >Profile</MenuItem>
                 <MenuItem >My account</MenuItem>
-                <MenuItem >Logout</MenuItem>
+                <a href='/' style={{textDecoration:'none',color:'black'}}>
+                  <MenuItem onClick={()=>OnLogoutClick()}>Logout</MenuItem>
+                </a>
               </Menu>
             </>
             :
-            <Link to='/login' style={{textDecoration:'none',color:'white'}}>
-              <Button color="inherit">Login</Button>
-            </Link>
+            <div>
+              <Link to='/register' style={{textDecoration:'none',color:'white'}}>
+                <Button color="inherit">Register</Button>
+              </Link>
+              <Link to='/login' style={{textDecoration:'none',color:'white'}}>
+                <Button color="inherit">Login</Button>
+              </Link>
+
+            </div>
           }
         </Toolbar>
       </AppBar>
@@ -106,4 +125,4 @@ const MapstatetoProps=({Auth})=>{
     ...Auth
   }
 }
-export default connect(MapstatetoProps)(ButtonAppBar);
+export default connect(MapstatetoProps,{LogoutFunc})(ButtonAppBar);

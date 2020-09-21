@@ -30,7 +30,7 @@ class DetailProd extends Component {
         if(this.props.role==='admin'){
             alert('jangan beli bro inget admin')
         }else if(this.props.role==='user'){
-            if(this.state.qty.current.value){
+            if(this.state.qty.current.value>0){
                 Axios.post(`${API_URL}/carts`,{
                     userId:this.props.id,
                     productId:this.state.products.id,
@@ -49,7 +49,7 @@ class DetailProd extends Component {
                     })
                 })
             }else{
-                toast('salah broo harusnya qty disii', {
+                toast('salah broo harusnya qty disii dan tidak boleh minus', {
                     position: "top-right",
                     autoClose: 5000,
                     hideProgressBar: false,

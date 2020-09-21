@@ -11,6 +11,53 @@
       "username": "admin",
       "password": "root",
       "role": "admin"
+    },
+    {
+      "username": "A",
+      "password": "A",
+      "id": 3
+    },
+    {
+      "username": "dino",
+      "password": "dino",
+      "role": "user",
+      "id": 4
+    },
+    {
+      "username": "dinoa",
+      "password": "Aa123456@",
+      "role": "user",
+      "id": 5
+    },
+    {
+      "username": "tes",
+      "password": "Aa123456@",
+      "role": "user",
+      "id": 6
+    },
+    {
+      "username": "Aaaa",
+      "password": "Aa123456@",
+      "role": "user",
+      "id": 7
+    },
+    {
+      "username": "randi",
+      "password": "Aa123456@",
+      "role": "user",
+      "id": 8
+    },
+    {
+      "username": "diNo0",
+      "password": "Aa123456@",
+      "role": "user",
+      "id": 9
+    },
+    {
+      "username": "tesaja",
+      "password": "Aa123456@",
+      "role": "user",
+      "id": 10
     }
   ],
   "products": [
@@ -61,6 +108,18 @@
     }
   ],
   "carts": [
+    {
+      "userId": 1,
+      "productId": 1,
+      "qty": 1,
+      "id": 1
+    },
+    {
+      "userId": 1,
+      "productId": 1,
+      "qty": 1,
+      "id": 2
+    }
   ],
   "transactions": [
     {
@@ -78,6 +137,38 @@
       "metode": "upload",
       "buktipembayaran": "https://www.pakaiatm.com/wp-content/uploads/2020/03/Contoh-Bukti-Transfer-BRI-Asli-atau-Palsu.jpg",
       "id": 3
+    },
+    {
+      "status": "Completed",
+      "userId": 10,
+      "tanggalPembayaran": 1600681338277,
+      "metode": "cc",
+      "buktipembayaran": "",
+      "id": 4
+    },
+    {
+      "status": "Completed",
+      "userId": 10,
+      "tanggalPembayaran": 1600682092334,
+      "metode": "cc",
+      "buktipembayaran": "4661601019747259",
+      "id": 5
+    },
+    {
+      "status": "WaitingAdmin",
+      "userId": 10,
+      "tanggalPembayaran": 1600682914790,
+      "metode": "upload",
+      "buktipembayaran": "",
+      "id": 6
+    },
+    {
+      "status": "Completed",
+      "userId": 10,
+      "tanggalPembayaran": 1600684924958,
+      "metode": "cc",
+      "buktipembayaran": "4661601019747259",
+      "id": 7
     }
   ],
   "transactionsdetails": [
@@ -115,6 +206,41 @@
       "price": 999000,
       "qty": 1,
       "id": 7
+    },
+    {
+      "transactionId": 4,
+      "productId": 3,
+      "price": 200000,
+      "qty": 1,
+      "id": 8
+    },
+    {
+      "transactionId": 5,
+      "productId": 4,
+      "price": 500000,
+      "qty": 1,
+      "id": 9
+    },
+    {
+      "transactionId": 6,
+      "productId": 2,
+      "price": 300002,
+      "qty": 1,
+      "id": 10
+    },
+    {
+      "transactionId": 7,
+      "productId": 4,
+      "price": 500000,
+      "qty": 1,
+      "id": 11
+    },
+    {
+      "transactionId": 7,
+      "productId": 1,
+      "price": 200000,
+      "qty": 1,
+      "id": 12
     }
   ]
 }
