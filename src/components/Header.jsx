@@ -42,11 +42,53 @@ const StyledBadge = withStyles(() => ({
 function ButtonAppBar({username,isLogin,role,cart}) {
   const classes = useStyles();
   const [anchorEl,setopen]=useState(null)
+  const [anchorE2,setopen2]=useState(null)
 
+  console.log(cart)
   const OnLogoutClick=()=>{
     LogoutFunc()
-    
-}
+  }
+  const rendercart=()=>{
+    if(cart.length){
+
+      var isicart=cart.map((val)=>{
+        return(
+          <MenuItem key={val.id} style={{padding:'10px'}} className="d-flex">
+            <div style={{padding:'5px'}}>
+              <img width="100px" src={val.product.gambar}/>
+              
+            </div>
+            <div style={{padding:'5px'}} className="d-flex flex-column">
+              <div>
+                {val.product.namatrip}
+              </div>
+              <div>
+                QTY = {val.qty}
+              </div>
+            </div>
+          </MenuItem>
+        )
+      })
+      return(
+        < >
+          <div>
+            {isicart}
+          </div>
+          <div style={{padding:'15px', textAlign:"center"}}>
+            
+            <Link to="/cart">
+              Go to cart
+              
+            </Link>
+          </div>
+        </>
+      )
+    }else{
+      return(
+        <MenuItem>Masih Kosong</MenuItem>
+      )
+    }
+  }
 
   return (
     <div className={classes.root}>
@@ -62,24 +104,36 @@ function ButtonAppBar({username,isLogin,role,cart}) {
           </Typography>
           {
             role==='admin'?
-            <Link to='/manageAdmin' style={{textDecoration:'none',color:'white'}}>
-              <Button color="inherit">Admin</Button>
-            </Link>
+            <>
+              <Link to='/managePembayaran' style={{textDecoration:'none',color:'white'}}>
+                <Button color="inherit">Manage Pembayaran</Button>
+              </Link>
+              <Link to='/manageAdmin' style={{textDecoration:'none',color:'white'}}>
+                <Button color="inherit">Manage Admin</Button>
+              </Link>
+
+            </>
             :
             role==='user'?
             <>
               <Link to='/history' style={{textDecoration:'none',color:'white'}}>
-                <Button color="inherit" onClick={(e)=>setopen(e.currentTarget)}>History</Button>
+                <Button color="inherit" >History</Button>
               </Link>
-              <Link to='/cart' style={{textDecoration:'none',color:'white'}}>
-                <Button color="inherit">
-                  <StyledBadge badgeContent={cart.length} oolor='secondary' >
-                    <span style={{fontSize:20}}>
-                      <FaCartArrowDown />
-                    </span>
-                  </StyledBadge>
-                </Button>
-              </Link>
+              <Button color="inherit" aria-controls="simple-menu" aria-haspopup="true" onClick={(e)=>setopen2(e.currentTarget)}>
+                <StyledBadge badgeContent={cart.length} color='secondary' >
+                <FaCartArrowDown style={{fontSize:20}}/>
+                </StyledBadge>
+              </Button>
+              <Menu
+                id="simple-menu"
+                anchorEl={anchorE2}
+                keepMounted
+                open={Boolean(anchorE2)}
+                onClose={()=>setopen2(null)}
+              >
+                {rendercart()}
+
+              </Menu>
             </>
             :
             null
@@ -97,6 +151,10 @@ function ButtonAppBar({username,isLogin,role,cart}) {
                 // onClose={handleClose}
               >
                 <MenuItem >Profile</MenuItem>
+                <Link to='/gantipassword'style={{textDecoration:'none',color:'black'}}>
+                  <MenuItem >Ganti Password</MenuItem>
+                </Link>
+                  
                 <MenuItem >My account</MenuItem>
                 <a href='/' style={{textDecoration:'none',color:'black'}}>
                   <MenuItem onClick={()=>OnLogoutClick()}>Logout</MenuItem>

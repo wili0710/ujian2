@@ -1,5 +1,5 @@
 import React, { Component, createRef } from 'react';
-import Header from '../../components/Header'
+// import Header from '../../components/Header'
 import {connect} from 'react-redux'
 import Axios from 'axios'
 import { API_URL, priceFormatter, dateformat } from '../../helpers/idrformat';
@@ -13,9 +13,9 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import TableFooter from '@material-ui/core/TableFooter';
 import ButtonUi from '../../components/button'
-import {Modal,ModalHeader,ModalBody,ModalFooter} from 'reactstrap'
+// import {Modal,ModalHeader,ModalBody,ModalFooter} from 'reactstrap'
 import {AddcartAction} from '../../redux/Actions'
-import Swal from 'sweetalert2';
+// import Swal from 'sweetalert2';
 class history extends Component {
     state = {
         history:[],

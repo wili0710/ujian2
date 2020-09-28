@@ -1,12 +1,12 @@
 import React, { Component,createRef } from 'react';
-import './register.css'
+import './../register/register.css'
 import Foto from './../../assets/Homescreen.webp'
 import { withStyles } from '@material-ui/core/styles';
 import Axios from 'axios'
 import TextField from '@material-ui/core/TextField';
 import {API_URL} from './../../helpers/idrformat'
 import {connect} from 'react-redux';
-import {Redirect, Link} from 'react-router-dom'
+// import {Redirect, Link} from 'react-router-dom'
 import {RegisterThunk,Clearfunc} from './../../redux/Actions'
 import Swal from 'sweetalert2';
 const Styles={
@@ -46,19 +46,20 @@ const Styles={
 class Register extends Component {
     
     state = {
-        username:createRef(),
+        passwordlama:createRef(),
         password:createRef(),
         confirmpassword:createRef(),
         alert:''
     }
 
-    OnRegisterClick=()=>{
-        const {username,password,confirmpassword}=this.state
-        var username1=username.current.value.replace(/\s/g,"")
-        var usernamecek=username1.toLowerCase()
+    OnGantiPasswordClick=()=>{
+        const {passwordlama,password,confirmpassword}=this.state
+        console.log(this.props.Auth.username)
+        var username=this.props.Auth.username
+        var passwordlama1=passwordlama.current.value.replace(/\s/g,"")
         var password1=password.current.value.replace(/\s/g,"")
         var confirmpassword1=confirmpassword.current.value.replace(/\s/g,"")
-        if(username1==="" || password1===""){
+        if(passwordlama==="" || password==="" || confirmpassword===""){
             return (
                 Swal.fire({
                     icon: 'error',
@@ -83,14 +84,13 @@ class Register extends Component {
         var arrAlphabetLow=("zxcvbnmlkjhgfdsaqwertyuiop").split("")
         var arrAlphabetHigh=("ZXCVBNMLKJHGFDSAQWERTYUIOP").split("")
         var condSS,condNum,condAL,condAH=false
-        console.log(condSS)
         var arrPass=password1.split("")
         var x,z=0
 
         for(x=0;x<=arrPass.length;x++){
             if(!condSS){
                 for(z=0;z<=arrSpecialSymbol.length-1;z++){
-                    if(arrPass[x]===arrSpecialSymbol[z]){
+                    if(arrPass[x]==arrSpecialSymbol[z]){
                         condSS=true
                         break
                     }
@@ -99,7 +99,7 @@ class Register extends Component {
             
             if(!condNum){
                 for(z=0;z<=arrNumber.length-1;z++){
-                    if(arrPass[x]===arrNumber[z]){
+                    if(arrPass[x]==arrNumber[z]){
                         condNum=true
                         break
                     }
@@ -107,7 +107,7 @@ class Register extends Component {
             }
             if(!condAL){
                 for(z=0;z<=arrAlphabetLow.length-1;z++){
-                    if(arrPass[x]===arrAlphabetLow[z]){
+                    if(arrPass[x]==arrAlphabetLow[z]){
                         condAL=true
                         break
                     }
@@ -115,14 +115,14 @@ class Register extends Component {
             }
             if(!condAH){
                 for(z=0;z<=arrAlphabetHigh.length-1;z++){
-                    if(arrPass[x]===arrAlphabetHigh[z]){
+                    if(arrPass[x]==arrAlphabetHigh[z]){
                         condAH=true
                         break
                     }
                 }
             }
         }
-        if(condSS,condNum,condAL,condAH===false){
+        if(condSS,condNum,condAL,condAH==false){
             return(
                 Swal.fire({
                     icon: 'error',
@@ -140,31 +140,61 @@ class Register extends Component {
                   })
             )
         }
-        this.props.RegisterThunk(username1,usernamecek,password1,"user")
+        console.log(username,passwordlama1)
+        Axios.get(`${API_URL}/users?username=${username}&password=${passwordlama1}`)
         
-        // console.log(username1,password1)
-        // Axios.get(`${API_URL}/users?username=${username1}&password=${password1}`)
-        // .then((res)=>{
-        //     console.log('masuk sini')
-        //     console.log(res.data)
-        //     if(res.data.length){
-        //         localStorage.setItem('id',res.data[0].id)
-        //         this.props.LoginFunc(res.data[0])
-        //     }else{
-        //         console.log('user salah password')
-        //         this.setState({alert:'Password / Username salah bro'})
-        //     }
-        // }).catch((err)=>{
-        //     console.log(err)
-        // })
+        .then((res)=>{
+            if(res.data){
+                // this.updatePayment(username,passwordlama1,password1)
+                var id=parseInt(res.data[0].id)
+                console.log(res.data[0].id)
+                console.log(res.data)
+                // Axios.patch(`${API_URL}/users?username=${username}&password=${passwordlama1}`,{
+                Axios.patch(`${API_URL}/users/${id}`,{
+                    password:password1
+                }).catch((err)=>{
+                    console.log(err)
+                })
+                console.log("jalan")
+            }else{
+                return(
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'Password Lama Tidak Sama!',
+                      })
+                )
+            }
+        }).catch((err)=>{
+            console.log(err)
+        })
     }
+
+    // updatePayment=(input,input2,input3)=>{
+    //     // console.log(temporary)
+    //     Axios.patch(`${API_URL}/users?username=${input}&password=${input2}`,{
+    //         role:input3,
+          // userId: temporary.userId,
+          // tanggalPembayaran: temporary.tanggalPembayaran,
+          // metode: temporary.metode,
+          // buktipembayaran: temporary.buktipembayaran,
+          // total: temporary.total    
+        // }).then(()=>{
+        //     axios.get(`${API_URL}/transactions?status=WaitingAdmin`)
+        //     .then((res)=>{
+        //         setconfirmpayment(res.data)
+        //     }).catch((err)=>{
+        //         console.log(err)
+        //     })
+    //     }).catch((err)=>{
+    //         console.log(err)
+    //     })
+    // }
 
     render() { 
         const { classes } = this.props;
         console.log(this.props.Auth)
-        if(this.props.Auth.isLogin){
-            return <Redirect to='/'/>
-        }
+        
         return (
             <div className='row m-0 p-0'>
                 <div className='col-md-6 m-0 p-0' style={{height:'100vh'}} >
@@ -172,18 +202,17 @@ class Register extends Component {
                 </div>
                 <div className='col-md-6 m-0 p-0 d-flex justify-content-center align-items-center' style={{background:'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)'}}>
                     <div className='login-kotak d-flex px-4'>
-                        <h1 className='align-self-center'>Register</h1>
+                        <h1 className='align-self-center'>Ganti Password</h1>
                         <div className='mt-3'>
                             <TextField 
-                                inputProps={{ 
-                                    className:'text-white login-placeholder'
-                                }} 
+                                inputProps={{ className:'text-white'}} 
+                                className={classes.root} 
+                                inputRef={this.state.passwordlama} 
                                 InputLabelProps={{
                                     className:'text-white'
-                                }} 
-                                className={classes.root} 
-                                inputRef={this.state.username} 
-                                label="Username" 
+                                }}
+                                type="password"  
+                                label="Password Lama" 
                                 fullWidth='true' 
                                 variant="outlined" 
                                 size='small' 
@@ -229,12 +258,8 @@ class Register extends Component {
                         </div>
                         
                         <div className=' align-self-end '>
-                            <button disabled={this.props.Auth.isLoading} onClick={this.OnRegisterClick} className='px-3 py-2 rounded text-white' style={{border:'white 1px solid',backgroundColor:'transparent'}}>
-                                Register
-                            </button>
-                        </div>
-                        <div>
-                            <span> have account ? <Link to='/login' style={{textDecoration:'none',color:'blue'}}> click here</Link></span>
+                            <button disabled={this.props.Auth.isLoading} onClick={()=>{this.OnGantiPasswordClick()}} className='px-3 py-2 rounded text-white' style={{border:'white 1px solid',backgroundColor:'transparent'}}>
+                                Ganti                            </button>
                         </div>
                     </div>
                 </div>

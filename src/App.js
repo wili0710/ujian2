@@ -18,6 +18,8 @@ import 'react-toastify/dist/ReactToastify.css'
 import register from './pages/register/register';
 import history from './pages/history/history';
 import detailhistory from './pages/history/detailhistory';
+import managepembayaran from './pages/admin/managepembayaran';
+import gantipassword from './pages/gantipassword/gantipassword';
 // umum : register
 // user : history,
 // admin :confirm admin,
@@ -61,6 +63,7 @@ function App(props) {
       return(
         <>
           <Route exact path='/manageAdmin' component={ManageAdmin}/>
+          <Route exact path='/managePembayaran' component={managepembayaran}/>
         </>
       )
     }
@@ -74,6 +77,7 @@ function App(props) {
         <Route exact path='/register' component={register}/>
         <Route exact path='/history' component={history}/>
         <Route exact path='/historydetail' component={detailhistory}/>
+        <Route exact path='/gantipassword' component={gantipassword}/>
         <Route exact path='/products' component={ListProd}/>
         <Route path='/products/:id' component={DetailProd}/>
         <Route exact path='/cart' component={Cart}/>

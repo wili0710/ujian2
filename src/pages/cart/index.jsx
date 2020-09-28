@@ -170,7 +170,8 @@ class Cart extends Component {
             userId:this.props.id,
             tanggalPembayaran:new Date().getTime(),
             metode:'upload',
-            buktipembayaran:this.state.bukti.current.value
+            buktipembayaran:this.state.bukti.current.value,
+            total:this.renderTotalHarga()
         }).then((res)=>{
             var arr=[]
             this.state.cart.forEach((val)=>{

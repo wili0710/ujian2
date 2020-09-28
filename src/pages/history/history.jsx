@@ -15,11 +15,11 @@ import TableFooter from '@material-ui/core/TableFooter';
 import ButtonUi from './../../components/button'
 import {Modal,ModalHeader,ModalBody,ModalFooter} from 'reactstrap'
 import {AddcartAction} from './../../redux/Actions'
-import Swal from 'sweetalert2';
+// import Swal from 'sweetalert2';
 class history extends Component {
     state = {
-        cart:[],
         history:[],
+        historydetail:[],
         isOpen:false,
         pilihan:0,
         bukti:createRef(),
@@ -40,8 +40,11 @@ class history extends Component {
         }).catch((err)=>{
             console.log(err)
         })
+        
+    }
+    onDetailClick=(input)=>{
         console.log(this.props.id)
-        Axios.get(`${API_URL}/carts`,{
+        Axios.get(`${API_URL}/transactionsdetails?transactionId=${input}`,{
             params:{
                 userId:this.props.id,
                 _expand:'product'
@@ -49,14 +52,10 @@ class history extends Component {
         })
         .then((res)=>{
             console.log(res.data)
-            this.setState({cart:res.data})
+            this.setState({historydetail:res.data})
         }).catch((err)=>{
             console.log(err)
         })
-    }
-    
-
-    onDetailClick=()=>{
         this.setState({isOpen:true})
     }
     closeDetailClick=()=>{
@@ -70,7 +69,7 @@ class history extends Component {
                     <TableCell>{index+1}</TableCell>
                     <TableCell>{val.metode}</TableCell>
                     <TableCell>{dateformat(val.tanggalPembayaran)}</TableCell>
-                    <TableCell><ButtonUi onClick={this.onDetailClick}  className='my-3' >
+                    <TableCell><ButtonUi onClick={()=>{this.onDetailClick(val.id)}}  className='my-3' >
                                 Detail
                             </ButtonUi></TableCell>
 
@@ -80,8 +79,8 @@ class history extends Component {
     }
 
     renderDetail=()=>{
-        console.log(this.state.history)
-        return this.state.cart.map((val,index)=>{
+        console.log(this.state.historydetail)
+        return this.state.historydetail.map((val,index)=>{
             return(
                 <TableRow key={val.id}>
                     <TableCell>{index+1}</TableCell>
@@ -101,7 +100,7 @@ class history extends Component {
     // transaction itu ada id,status,userId,tanggalpembayaran,metode,buktipembayaran,
     // transactionDetails id,transactionId,productId,price,qty
     renderTotalHarga=()=>{
-        var total=this.state.cart.reduce((total,num)=>{
+        var total=this.state.historydetail.reduce((total,num)=>{
             return total+(num.product.harga*num.qty)
         },0)
         return total
@@ -111,7 +110,7 @@ class history extends Component {
         if(this.props.role==='user') {
             return (
                 <div>
-                    <Modal isOpen={this.state.isOpen} toggle={()=>this.setState({isOpen:false})}>
+                    <Modal size='lg' isOpen={this.state.isOpen} toggle={()=>this.setState({isOpen:false})}>
                         <ModalHeader toggle={()=>this.setState({isOpen:false})}>Details</ModalHeader>
                         <ModalBody>
                         <div className=' pt-3' style={{paddingLeft:'10%',paddingRight:'10%'}}>
@@ -144,13 +143,13 @@ class history extends Component {
                     </div>
                         </ModalBody>
                         <ModalFooter>
-                            <ButtonUi onClick={this.onDetailClick}>
+                            <ButtonUi onClick={this.closeDetailClick}>
                                 Ok
                             </ButtonUi>
                         </ModalFooter>
                     </Modal>
                     <Header/>
-                    <div className=' pt-3' style={{paddingLeft:'10%',paddingRight:'10%'}}>
+                    <div className='d-flex justify-content-center pt-3' style={{paddingLeft:'10%',paddingRight:'10%'}}>
                         <Paper >
                             <TableContainer >
                                 <Table stickyHeader>

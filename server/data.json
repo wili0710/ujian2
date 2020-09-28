@@ -3,7 +3,7 @@
     {
       "id": 1,
       "username": "dino",
-      "password": "abcd",
+      "password": "Aa123456@",
       "role": "user"
     },
     {
@@ -11,53 +11,6 @@
       "username": "admin",
       "password": "root",
       "role": "admin"
-    },
-    {
-      "username": "A",
-      "password": "A",
-      "id": 3
-    },
-    {
-      "username": "dino",
-      "password": "dino",
-      "role": "user",
-      "id": 4
-    },
-    {
-      "username": "dinoa",
-      "password": "Aa123456@",
-      "role": "user",
-      "id": 5
-    },
-    {
-      "username": "tes",
-      "password": "Aa123456@",
-      "role": "user",
-      "id": 6
-    },
-    {
-      "username": "Aaaa",
-      "password": "Aa123456@",
-      "role": "user",
-      "id": 7
-    },
-    {
-      "username": "randi",
-      "password": "Aa123456@",
-      "role": "user",
-      "id": 8
-    },
-    {
-      "username": "diNo0",
-      "password": "Aa123456@",
-      "role": "user",
-      "id": 9
-    },
-    {
-      "username": "tesaja",
-      "password": "Aa123456@",
-      "role": "user",
-      "id": 10
     }
   ],
   "products": [
@@ -65,7 +18,7 @@
       "namatrip": "go to lombok",
       "gambar": "https://media.nomadicmatt.com/baliguide.jpg",
       "tanggalmulai": 1599782400000,
-      "tanggalberakhir": 1600905600000,
+      "tanggalberakhir": 1601424000000,
       "harga": "200000",
       "deskripsi": "jl. jlan ke lombok aja deh",
       "id": 1
@@ -111,12 +64,12 @@
     {
       "userId": 1,
       "productId": 1,
-      "qty": 1,
+      "qty": 2,
       "id": 1
     },
     {
       "userId": 1,
-      "productId": 1,
+      "productId": 3,
       "qty": 1,
       "id": 2
     }
@@ -125,122 +78,106 @@
     {
       "status": "Completed",
       "userId": 1,
-      "tanggalPembayaran": 1600228677900,
+      "tanggalPembayaran": 1600780930238,
       "metode": "cc",
-      "buktipembayaran": "321321313123123",
+      "buktipembayaran": "",
+      "id": 1
+    },
+    {
+      "status": "Completed",
+      "userId": 1,
+      "tanggalPembayaran": 1600780953777,
+      "metode": "upload",
+      "buktipembayaran": "",
+      "total": 2000000,
       "id": 2
+    },
+    {
+      "status": "Completed",
+      "userId": 1,
+      "tanggalPembayaran": 1600929485698,
+      "metode": "upload",
+      "buktipembayaran": "",
+      "total": 400000,
+      "id": 3
     },
     {
       "status": "WaitingAdmin",
       "userId": 1,
-      "tanggalPembayaran": 1600229071836,
+      "tanggalPembayaran": 1600930273365,
       "metode": "upload",
-      "buktipembayaran": "https://www.pakaiatm.com/wp-content/uploads/2020/03/Contoh-Bukti-Transfer-BRI-Asli-atau-Palsu.jpg",
-      "id": 3
-    },
-    {
-      "status": "Completed",
-      "userId": 10,
-      "tanggalPembayaran": 1600681338277,
-      "metode": "cc",
       "buktipembayaran": "",
+      "total": 200000,
       "id": 4
     },
     {
-      "status": "Completed",
-      "userId": 10,
-      "tanggalPembayaran": 1600682092334,
-      "metode": "cc",
-      "buktipembayaran": "4661601019747259",
+      "status": "WaitingAdmin",
+      "userId": 1,
+      "tanggalPembayaran": 1600930894900,
+      "metode": "upload",
+      "buktipembayaran": "",
+      "total": 200000,
       "id": 5
     },
     {
       "status": "WaitingAdmin",
-      "userId": 10,
-      "tanggalPembayaran": 1600682914790,
+      "userId": 1,
+      "tanggalPembayaran": 1600949519623,
       "metode": "upload",
       "buktipembayaran": "",
+      "total": 200000,
       "id": 6
-    },
-    {
-      "status": "Completed",
-      "userId": 10,
-      "tanggalPembayaran": 1600684924958,
-      "metode": "cc",
-      "buktipembayaran": "4661601019747259",
-      "id": 7
     }
   ],
   "transactionsdetails": [
     {
-      "transactionId": 2,
-      "productId": 2,
-      "price": 300002,
-      "qty": 2,
-      "id": 3
-    },
-    {
-      "transactionId": 2,
-      "productId": 2,
-      "price": 300002,
-      "qty": 2,
-      "id": 4
+      "transactionId": 1,
+      "productId": 3,
+      "price": 200000,
+      "qty": 10,
+      "id": 1
     },
     {
       "transactionId": 2,
       "productId": 3,
       "price": 200000,
+      "qty": 10,
+      "id": 2
+    },
+    {
+      "transactionId": 3,
+      "productId": 3,
+      "price": 200000,
       "qty": 1,
-      "id": 5
+      "id": 3
     },
     {
       "transactionId": 3,
       "productId": 1,
       "price": 200000,
       "qty": 1,
-      "id": 6
-    },
-    {
-      "transactionId": 3,
-      "productId": 5,
-      "price": 999000,
-      "qty": 1,
-      "id": 7
+      "id": 4
     },
     {
       "transactionId": 4,
       "productId": 3,
       "price": 200000,
       "qty": 1,
-      "id": 8
+      "id": 5
     },
     {
       "transactionId": 5,
-      "productId": 4,
-      "price": 500000,
+      "productId": 3,
+      "price": 200000,
       "qty": 1,
-      "id": 9
+      "id": 6
     },
     {
       "transactionId": 6,
-      "productId": 2,
-      "price": 300002,
-      "qty": 1,
-      "id": 10
-    },
-    {
-      "transactionId": 7,
-      "productId": 4,
-      "price": 500000,
-      "qty": 1,
-      "id": 11
-    },
-    {
-      "transactionId": 7,
-      "productId": 1,
+      "productId": 3,
       "price": 200000,
       "qty": 1,
-      "id": 12
+      "id": 7
     }
   ]
 }

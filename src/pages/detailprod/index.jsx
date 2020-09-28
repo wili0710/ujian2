@@ -8,6 +8,7 @@ import { API_URL,dateformat } from '../../helpers/idrformat';
 import {connect} from 'react-redux'
 import {AddcartAction} from './../../redux/Actions'
 import {toast} from 'react-toastify'
+// import { red } from '@material-ui/core/colors';
 class DetailProd extends Component {
     state = {
         loading:true,
@@ -31,22 +32,56 @@ class DetailProd extends Component {
             alert('jangan beli bro inget admin')
         }else if(this.props.role==='user'){
             if(this.state.qty.current.value>0){
-                Axios.post(`${API_URL}/carts`,{
-                    userId:this.props.id,
-                    productId:this.state.products.id,
-                    qty: parseInt(this.state.qty.current.value)
-                }).then(()=>{
-                    Axios.get(`${API_URL}/carts`,{
-                        params:{
+                Axios.get(`${API_URL}/carts`,{
+                    params:{
+                        userId:this.props.id,
+                        productId:this.state.products.id
+                    }
+                }).then((res)=>{
+                    console.log(res)
+                    if(res.data.length){
+                        console.log("ada")
+                        var id=res.data[0].id
+                        var qty1=res.data[0].qty
+                        Axios.put(`${API_URL}/carts/${id}`,{
+                            userId:res.data[0].userId,
+                            productId:res.data[0].productId,
+                            qty:qty1+parseInt(this.state.qty.current.value)
+                        }).then(()=>{
+                            console.log("masuk")
+                            Axios.get(`${API_URL}/carts`,{
+                                params:{
+                                    userId:this.props.id,
+                                    _expand:'product'
+                                }
+                            }).then((res)=>{
+                                this.props.AddcartAction(res.data)
+                                alert('berhasil masuk cart')
+                            }).catch((err)=>{
+                                console.log(err)
+                            })
+                        })
+                    }else{
+                        console.log("belum ada")
+                        Axios.post(`${API_URL}/carts`,{
                             userId:this.props.id,
-                            _expand:'product'
-                        }
-                    }).then((res)=>{
-                        this.props.AddcartAction(res.data)
-                        alert('berhasil masuk cart')
-                    }).catch((err)=>{
-                        console.log(err)
-                    })
+                            productId:this.state.products.id,
+                            qty: parseInt(this.state.qty.current.value)
+                        }).then(()=>{
+                            console.log("masuk 1")
+                            Axios.get(`${API_URL}/carts`,{
+                                params:{
+                                    userId:this.props.id,
+                                    _expand:'product'
+                                }
+                            }).then((res)=>{
+                                this.props.AddcartAction(res.data)
+                                alert('berhasil masuk cart')
+                            }).catch((err)=>{
+                                console.log(err)
+                            })
+                        })
+                    }
                 })
             }else{
                 toast('salah broo harusnya qty disii dan tidak boleh minus', {

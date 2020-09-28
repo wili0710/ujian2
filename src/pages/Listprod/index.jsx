@@ -5,13 +5,27 @@ import {
     Breadcrumb, BreadcrumbItem, Card, CardImg} from 'reactstrap';
 import Axios from 'axios'
 import {Link} from 'react-router-dom'
-import { API_URL,priceFormatter } from '../../helpers/idrformat';
+import { API_URL,priceFormatter, dateformat } from '../../helpers/idrformat';
 class ListProd extends Component {
     state = {
         Products:[]
       }
     componentDidMount(){
-        Axios.get(`${API_URL}/products`)
+        var tanggalsekarang=new Date().getTime()
+        console.log(tanggalsekarang)
+        Axios.get(`${API_URL}/products?tanggalberakhir_gte=${tanggalsekarang}`)
+        .then((res)=>{
+            console.log(res.data)
+            this.setState({Products:res.data})
+        }).catch((err)=>{
+            console.log(err)
+        })
+    }
+    onChangeFilter=(input)=>{
+        var filter=input
+        var tanggalsekarang=new Date().getTime()
+        console.log(filter)
+        Axios.get(`${API_URL}/products?tanggalberakhir_gte=${tanggalsekarang}&namatrip_like=${filter}`)
         .then((res)=>{
             console.log(res.data)
             this.setState({Products:res.data})
@@ -51,6 +65,11 @@ class ListProd extends Component {
                         <BreadcrumbItem ><Link className='link-class' to="/">Home</Link></BreadcrumbItem>
                         <BreadcrumbItem active>Products</BreadcrumbItem>
                     </Breadcrumb>
+                    <div className="ml-3">
+                        Filter
+                        <input className="ml-3" placeholder="Nama Trip" onChange={event=>this.onChangeFilter(event.target.value)}>
+                        </input>
+                    </div>
                     <div className="row p-0 m-0">
                         {this.renderCard()}
                     </div>
